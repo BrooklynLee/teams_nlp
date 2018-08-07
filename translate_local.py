@@ -5,7 +5,11 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from translate_test import translate_function
-import brooklyn
+from trytry import translate_function2
+from langdetect import detect
+import brooklyn_sentence
+import brooklyn_korean
+import markov2
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -33,7 +37,8 @@ def index():
     name = None
     Trans = None
     Rom = None
-    Sim = None ##
+    Sim = None
+    Wine2 = None
     form = NameForm()
 
 
@@ -42,18 +47,17 @@ def index():
         name = form.name.data
         Trans = translate_function(name)[0]
         Rom = translate_function(name)[1]
-
-        # if sim is 0:
-        #     Sim = brooklyn.similar(name)
-        # else :
-        #     Sim = sim
-        # Sim = brooklyn.similar(name) ##
+        if detect(name) == 'ko':
+            Sim = brooklyn_korean.similar(name)
+        else:
+            Sim = brooklyn_sentence.similar(name)
+        #Wine = markov2.MarkovName()
+        #Wine2 = Wine.generate_name()
 
 
 
         #form.name.data = ''
-    return render_template('index.html', form=form, name1=Trans, name2=Rom, name3=Sim) ##
-
+    return render_template('index.html', form=form, name1=Trans, name2=Rom, name3=Sim)
 
 
 if __name__ == '__main__':
